@@ -65,13 +65,18 @@ function viewAllDepartments(){
     })
 };
 function viewAllRoles(){
-    connection.query('SELECT title, role_id, department_name, salary FROM role INNER JOIN department ON role.department_id = department.id ', function(err, res){
+    connection.query('SELECT title, role_id, department_name, salary FROM role INNER JOIN department ON role.department_id = department.id', function(err, res){
         if(err) throw err;
         console.table(res);
         start();
     })
 };
 function viewAllEmployees(){
+    connection.query('SELECT employee_id, first_name, last_name, title, department_name, salary FROM employee INNER JOIN role ON employee.role_id = role.role_id INNER JOIN department ON role.department_id = department.id', function (err, res){
+        if(err) throw err;
+        console.table(res);
+        start();
+    })
 };
 function addADepartment(){
 };
