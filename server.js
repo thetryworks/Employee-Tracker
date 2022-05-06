@@ -1,7 +1,7 @@
 //packages using for this project
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const consoleTables = require('console.table');
+const cTable = require('console.table');
 
 //basic way to connect the application to the MySQL database
 const connection = mysql.createConnection({
@@ -29,6 +29,53 @@ function start(){
                 'Add an employee', 
                 'Update an employee role']
             }
-        ])
+        ]).then (function(res){
+            switch(res.start){
+                case 'View all departments':
+                    viewAllDepartments();
+                    break;
+                case 'View all roles':
+                    viewAllRoles();
+                    break;
+                case 'View all employees':
+                    viewAllEmployees();
+                    break;
+                case 'Add a department':
+                    addADepartment();
+                    break;
+                case 'Add a role':
+                    addARole();
+                    break;
+                case 'Add an employee':
+                    addAnEmployee();
+                    break;
+                case 'update an employee':
+                    updateAnEmployee();
+                    break;
+            }
+        })
+};
+
+
+function viewAllDepartments(){
+    connection.query('SELECT * FROM department', function(err, res){
+        if(err) throw err;
+        console.table(res);
+        start();
+    })
+};
+function viewAllRoles(){
+};
+function viewAllEmployees(){
+};
+function addADepartment(){
+};
+function addARole(){
+};
+function addAnEmployee(){
+};
+function updateAnEmployee(){
 };
 start();
+
+
