@@ -79,6 +79,24 @@ function viewAllEmployees(){
     })
 };
 function addADepartment(){
+    inquirer
+        .prompt([
+            {
+            name: 'department',
+            type: 'input',
+            message: 'What department would you like to add?'
+            }
+        ]).then(function(answer){
+            connection.query(
+                "INSERT INTO department VALUES (DEFAULT, ?)",
+                [answer.department],
+                function(err){
+                    if(err) throw err;
+                    console.log('Departments updated with '+ answer.department);
+                    start();
+                }
+            )
+        })
 };
 function addARole(){
 };
