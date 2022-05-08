@@ -49,7 +49,7 @@ function start(){
                 case 'Add an employee':
                     addAnEmployee();
                     break;
-                case 'update an employee':
+                case 'Update an employee role':
                     updateAnEmployee();
                     break;
             }
@@ -208,6 +208,60 @@ function addAnEmployee(){
     });
 };
 function updateAnEmployee(){
+    connection.query("SELECT * FROM employee",
+    function(err, results){
+        if(err) throw err;
+        inquirer
+        .prompt([
+            {
+                name: "choice",
+                type: "rawlist",
+                choices: function(){
+                    let choiceArr = [];
+                    for (i=0; i < results.length; i++)
+                    {
+                        choiceArr.push(results[i].last_name);
+                    }
+                    return choiceArr;
+                },
+                message: 'Select an employee to update'
+            }
+        ]).then(function(answer){
+            const saveName = answer.choice;
+
+            connection.query('SELECT * FROM employee',
+            function(err, results){
+                if(err) throw err;
+            inquirer.prompt([
+                {
+                    name: 'role',
+                    type: 'rawlist',
+                    choices: function(){
+                        var choiceArr = [];
+                        for(i=0; i < results.length; i++){
+                            choiceArr.push(results[i].role_id)
+                        }
+                        return choiceArr
+                    },
+                    message: "select new title"
+                }
+                ]).then(function(answer){
+                    console.log(answer);
+                    console.log(saveName);
+                    connection.query("UPDATE employee SET ? WHERE last_name = ?",
+                        [
+                            {
+                                role_id: answer.role,
+                                manager_id: answer.manager
+                            }, saveName
+                        ],
+                    ),
+                    console.log('Employee updated');
+                    start();
+                })    
+            })
+        })
+    })
 };
 start();
 
