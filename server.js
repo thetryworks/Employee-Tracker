@@ -91,7 +91,7 @@ function addADepartment(){
             }
         ]).then(function(answer){
             connection.query(
-                "INSERT INTO department VALUES (DEFAULT, ?)",
+                'INSERT INTO department VALUES (DEFAULT, ?)',
                 [answer.department],
                 function(err){
                     if(err) throw err;
@@ -150,6 +150,62 @@ function addARole(){
 
 };
 function addAnEmployee(){
+    connection.query('SELECT * FROM role', function(err, results){
+        if(err) throw err;
+        inquirer
+        .prompt([
+            {
+                name: 'firstName',
+                type: 'input',
+                message: 'Enter employee first name'
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: 'Enter employee last name'
+            },
+            {
+                name: 'role',
+                type: 'number',
+                choices: function(){
+                    var choiceArr = [];
+                    for(i=0; i < results.length; i++){
+                        choiceArr.push(results[i].role_id)
+                    }
+                    return choiceArr;
+                },
+                message: 'Select role_id'
+            },
+            {
+                name: 'manager',
+                type: 'number',
+                validate: function(value){
+                    if(isNaN(value) === false){
+                        return true;
+                    }
+                    return false;
+                },
+                message: 'Enter manager_id',
+                default: '1'
+            }
+        ]).then(function(answer){
+            connection.query(
+                'INSERT INTO employee SET ?',
+                {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role_id: answer.role,
+                    manager_id: answer.manager
+                },
+                function(err){
+                    if(err) throw err;
+                    console.log('Employee Added');
+                    start();
+                }    
+            )
+            
+        });
+    });
 };
 function updateAnEmployee(){
 };
